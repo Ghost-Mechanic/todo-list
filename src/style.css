@@ -1,9 +1,30 @@
 body {
     margin: 0;
+    padding: 0;
     height: 100%;
 }
 
+.container {
+    min-height: 100vh;
+    display: flex;
+}
+
 .projects {
+    margin: 0;
     width: 30vw;
     border: solid 1px black;
+    box-sizing: border-box;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.project {
+    border: solid 1px black;
+}
+
+.todo {
+    display: flex;
 }
