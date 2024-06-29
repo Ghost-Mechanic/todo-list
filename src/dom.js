@@ -1,4 +1,5 @@
 import { displayProject } from "./buttons";
+import Delete from './delete-circle.svg';
 
 // this function will add a given project to the DOM 
 function addProjectToDOM(project, currProject) {
@@ -21,7 +22,7 @@ function addProjectToDOM(project, currProject) {
 }
 
 // this function creates the todo in the DOM
-function addTodoToDOM(todo) {
+function addTodoToDOM(todo, project, todoIndex) {
     
     // begin by getting a reference to the todos section for the project
     const todos = document.querySelector(".todos");
@@ -29,14 +30,25 @@ function addTodoToDOM(todo) {
     // create a new element for the todo to be added
     let newTodo = document.createElement("div");
     newTodo.classList.add("todo");
+    newTodo.dataset.index = todoIndex;
 
     // create a new element for the content of the todo, which is the title and due date
     let todoContent = document.createElement("div");
     todoContent.classList.add("content");
 
+    // create a new element for the remove section of the todo, which will allow the todo to be removed
+    let todoDelete = document.createElement("div");
+    todoDelete.classList.add("remove");
+
     // create a new input element for the checkbox next to the todo to mark completeness
     let checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+
+    // create a new image for each todo which is a delete button
+    const deleteButton = new Image();
+    deleteButton.src = Delete;
+    deleteButton.classList.add("delete-button");
+    todoDelete.appendChild(deleteButton);
 
     // create elements for the todo title and due date and append them to the todo content section
     let todoTitle = document.createElement("h3");
@@ -46,9 +58,10 @@ function addTodoToDOM(todo) {
     todoContent.appendChild(todoTitle);
     todoContent.appendChild(todoDueDate);
 
-    // add the checkbox and content to the todo element
+    // add the checkbox, content, and delete button to the todo element
     newTodo.appendChild(checkbox);
     newTodo.appendChild(todoContent);
+    newTodo.appendChild(todoDelete);
 
     // append the todo element to the container of todos
     todos.appendChild(newTodo);
@@ -56,6 +69,12 @@ function addTodoToDOM(todo) {
     // add an event listener to the todo element to expand it when clicked
     newTodo.addEventListener("click", () => {
         expandTodo(todo, todoContent);
+    });
+
+    // add an event listener to the todo's delete button to delete the todo when clicked
+    deleteButton.addEventListener("click", () => {
+        project.todoListClass.deleteTodo(todoIndex);
+        newTodo.remove();
     });
 }
 
@@ -96,9 +115,14 @@ function displayTodos(project) {
         newTodoDialog.showModal();
     });
 
+    // start a counter for todoIndex which will give each todo an index to make deletion easier
+    let todoIndex = 0;
+
     // display list of todos for project
     for (const todo of project.todoListClass.todoList) {
-        addTodoToDOM(todo);
+        console.log(project);
+        addTodoToDOM(todo, project, todoIndex);
+        ++todoIndex;
     }
 }
 

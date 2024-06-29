@@ -9,6 +9,8 @@ body {
     display: flex;
 }
 
+/* styling for projects section on left of page */
+
 .projects {
     margin: 0;
     width: 30vw;
@@ -16,15 +18,29 @@ body {
     box-sizing: border-box;
 }
 
+.project {
+    border: solid 1px black;
+}
+
+/* styling for all forms on page */
+
 .form {
     display: flex;
     flex-direction: column;
 }
 
-.project {
-    border: solid 1px black;
-}
+/* styling for todos on page */
 
 .todo {
     display: flex;
+}
+
+.remove {
+    display: flex;
+    align-items: center;
+}
+
+.delete-button {
+    width: 50px;
+    height: 50px;
 }

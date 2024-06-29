@@ -77,7 +77,9 @@ function createTodo(project) {
     descriptionField.value = "";
     dueDateField.value = "";
 
-    addTodoToDOM(project.todoListClass.todoList[project.todoListClass.todoList.length - 1]);
+    let todoIndex = project.todoListClass.todoList.length - 1;
+
+    addTodoToDOM(project.todoListClass.todoList[todoIndex], project, todoIndex);
 }
 
-export { createProject, displayProject, createTodo }
+export { createProject, displayProject, createTodo };
