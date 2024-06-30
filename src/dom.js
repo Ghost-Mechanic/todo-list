@@ -1,5 +1,7 @@
 import { displayProject, removeProject } from "./buttons";
+import { defaultProject, projects } from "./index.js";
 import Delete from './delete-circle.svg';
+import { saveToLocalStorage } from "./storage.js";
 
 // this function will add a given project to the DOM 
 function addProjectToDOM(project, currProject) {
@@ -29,6 +31,12 @@ function addTodoToDOM(todo, project, todoIndex) {
     // begin by getting a reference to the todos section for the project
     const todos = document.querySelector(".todos");
 
+    // reset delete project button to "delete project" if project is not default project
+    if (project != defaultProject) {
+        const deleteProjectBtn = document.querySelector(".todos .delete-project");
+        deleteProjectBtn.textContent = "Delete Project";
+    }
+
     // create a new element for the todo to be added
     let newTodo = document.createElement("div");
     newTodo.classList.add("todo");
@@ -45,6 +53,26 @@ function addTodoToDOM(todo, project, todoIndex) {
     // create a new input element for the checkbox next to the todo to mark completeness
     let checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.checked = todo.complete;
+    
+    // add listener to checkbox to change text of delete project button to "complete project"
+    // if all tasks are checked off
+    if (project != defaultProject) {
+        checkbox.addEventListener("change", () => {
+            todo.markComplete();
+
+            const deleteProjectBtn = document.querySelector(".todos .delete-project");
+
+            for (let i = 0; i < project.todoListClass.todoList.length; ++i) {
+                if (!project.todoListClass.todoList[i].complete) {
+                    deleteProjectBtn.textContent = "Delete Project";
+                    return;
+                }
+
+                deleteProjectBtn.textContent = "Complete Project";
+            }
+        });
+    }
 
     // create a new image for each todo which is a delete button
     const deleteButton = new Image();
@@ -77,6 +105,7 @@ function addTodoToDOM(todo, project, todoIndex) {
     deleteButton.addEventListener("click", () => {
         project.todoListClass.deleteTodo(todoIndex);
         newTodo.remove();
+        saveToLocalStorage(projects);
     });
 }
 
@@ -104,23 +133,27 @@ function displayTodos(project, projectDiv) {
     // initially display project description and due date, along with new todo button
     let projectDescription = document.createElement("p");
     let projectDueDate = document.createElement("p");
+    let todoButtons = document.createElement("div");
     let newTodoBtn = document.createElement("button");
     projectDescription.textContent = project.description;
     projectDueDate.textContent = project.dueDate;
     newTodoBtn.textContent = "+ Todo";
     todos.appendChild(projectDescription);
     todos.appendChild(projectDueDate);
-    todos.appendChild(newTodoBtn);
+    todoButtons.appendChild(newTodoBtn);
 
     // add delete button to project only if it is not the default project
     if (projectDiv.dataset.index > 0) {
         let deleteProjectBtn = document.createElement("button");
         deleteProjectBtn.textContent = "Delete Project";
-        todos.appendChild(deleteProjectBtn);
+        deleteProjectBtn.classList.add("delete-project");
+        todoButtons.appendChild(deleteProjectBtn);
         deleteProjectBtn.addEventListener("click", () => {
             removeProject(projectDiv);
         });
     }
+
+    todos.appendChild(todoButtons);
 
     // show form to add a new todo when the new todo botton is clicked
     newTodoBtn.addEventListener("click", () => {
@@ -132,7 +165,6 @@ function displayTodos(project, projectDiv) {
 
     // display list of todos for project
     for (const todo of project.todoListClass.todoList) {
-        console.log(project);
         addTodoToDOM(todo, project, todoIndex);
         ++todoIndex;
     }

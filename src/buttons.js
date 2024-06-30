@@ -1,6 +1,7 @@
 import { addProjectToDOM, displayTodos, addTodoToDOM } from './dom';
 import { Project } from './todo';
-import { currProject, defaultProject } from './index.js';
+import { currProject, defaultProject, projects } from './index.js';
+import { saveToLocalStorage } from './storage.js';
 
 // function to create a new project and add it to the dom through form input
 function createProject(currProject) {
@@ -31,6 +32,10 @@ function createProject(currProject) {
     titleField.value = "";
     descriptionField.value = "";
     dueDateField.value = "";
+
+    // save to storage after project is created
+    projects.push(newProject);
+    saveToLocalStorage(projects);
 
     // add the project that was just made to the DOM
     addProjectToDOM(newProject, currProject);
@@ -80,6 +85,9 @@ function createTodo(project) {
     let todoIndex = project.todoListClass.todoList.length - 1;
 
     addTodoToDOM(project.todoListClass.todoList[todoIndex], project, todoIndex);
+
+    // save to storage after todo is created
+    saveToLocalStorage(projects);
 }
 
 // this function will remove a project from the DOM and project list
@@ -90,7 +98,19 @@ function removeProject(projectDiv) {
     currProject.current = defaultProject;
     displayProject(defaultProject, defaultProjectDiv);
 
+    // remove project from projects array
+    const projectIndex = projectDiv.dataset.index;
+    projects.splice(projectIndex,  1);
+
+    // update dataset index for remaining projects
+    const allProjects = document.querySelectorAll(".projects .project");
+    allProjects.forEach((project, index) => {
+        project.dataset.index = index; // Update dataset index
+    });
+
     projectDiv.remove();
+    
+    saveToLocalStorage(projects);
 }
 
 export { createProject, displayProject, createTodo, removeProject };
