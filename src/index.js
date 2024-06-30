@@ -3,18 +3,17 @@ import { addProjectToDOM, displayTodos } from './dom';
 import { createProject, createTodo } from './buttons';
 import './style.css';
 
-// initialize webpage with an empty array of projects and a default project for any generic task
-let projects = [];
-
+// initialize webpage with a default project for any generic task
 let defaultProject = new Project("Default Project", "This is the default project for any generic tasks", "No due date");
 
 // create variable currProject to keep track of current project
 let currProject = { current: null };
 currProject.current = defaultProject;
 
-projects.push(defaultProject);
 addProjectToDOM(defaultProject, currProject);
-displayTodos(defaultProject);
+
+const defaultProjectDiv = document.querySelector(".projects .project");
+displayTodos(defaultProject, defaultProjectDiv);
 
 // add a listener to the new project div that will open up the form to make a new project
 const projectDialog = document.querySelector(".new-project-dialog");
@@ -27,7 +26,7 @@ newProjectBtn.addEventListener("click", () => {
 const newProjectSubmitBtn = document.querySelector("#submit-project");
 newProjectSubmitBtn.addEventListener("click", (event) => {
     event.preventDefault();
-    createProject(projects, currProject);
+    createProject(currProject);
     projectDialog.close();
 });
 
@@ -39,3 +38,5 @@ newTodoSubmitBtn.addEventListener("click", (event) => {
     createTodo(currProject.current);
     todoDialog.close();
 });
+
+export { currProject, defaultProject };

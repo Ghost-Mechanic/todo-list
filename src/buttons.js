@@ -1,8 +1,9 @@
 import { addProjectToDOM, displayTodos, addTodoToDOM } from './dom';
 import { Project } from './todo';
+import { currProject, defaultProject } from './index.js';
 
 // function to create a new project and add it to the dom through form input
-function createProject(projects, currProject) {
+function createProject(currProject) {
     const titleField = document.querySelector("#project-title");
     const descriptionField = document.querySelector("#project-description");
     const dueDateField = document.querySelector("#project-due-date");
@@ -23,9 +24,8 @@ function createProject(projects, currProject) {
         newDueDate = "No due date given";
     }
 
-    // create a new project object with constructor and add it to the array of projects
+    // create a new project object with constructor
     let newProject = new Project(newTitle, newDescription, newDueDate);
-    projects.push(newProject);
 
     // reset fields back to empty
     titleField.value = "";
@@ -37,14 +37,14 @@ function createProject(projects, currProject) {
 }
 
 // this function will display a project's todos on the DOM
-function displayProject(project) {
+function displayProject(project, projectDiv) {
     
     // begin by clearing the section
     const todoSection = document.querySelector(".todos");
     todoSection.innerHTML = "";
 
     // call displayTodos for the given project to display its todos
-    displayTodos(project);
+    displayTodos(project, projectDiv);
 }
 
 // this function will create a todo for a project
@@ -82,4 +82,15 @@ function createTodo(project) {
     addTodoToDOM(project.todoListClass.todoList[todoIndex], project, todoIndex);
 }
 
-export { createProject, displayProject, createTodo };
+// this function will remove a project from the DOM and project list
+function removeProject(projectDiv) {
+    
+    // set current project to be the default project after a project is removed
+    const defaultProjectDiv = document.querySelector(".projects .project");
+    currProject.current = defaultProject;
+    displayProject(defaultProject, defaultProjectDiv);
+
+    projectDiv.remove();
+}
+
+export { createProject, displayProject, createTodo, removeProject };

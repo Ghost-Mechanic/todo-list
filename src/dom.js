@@ -1,4 +1,4 @@
-import { displayProject } from "./buttons";
+import { displayProject, removeProject } from "./buttons";
 import Delete from './delete-circle.svg';
 
 // this function will add a given project to the DOM 
@@ -10,12 +10,14 @@ function addProjectToDOM(project, currProject) {
     let newProject = document.createElement("div");
     newProject.classList.add("project");
     newProject.textContent = project.title;
+    newProject.dataset.index = projects.childElementCount - 1;
+    newProject.project = project;
 
     // add an event listener to the new project div to display its todos on click
     // also update the current project
     newProject.addEventListener("click", () => {
         currProject.current = project;
-        displayProject(project);
+        displayProject(project, newProject);
     });
 
     projects.insertBefore(newProject, addProjectButton);
@@ -95,7 +97,7 @@ function expandTodo(todo, todoContent) {
 }
 
 // this function will display the todos of a given project
-function displayTodos(project) {
+function displayTodos(project, projectDiv) {
     const todos = document.querySelector(".todos");
     const newTodoDialog = document.querySelector(".new-todo-dialog");
 
@@ -109,6 +111,16 @@ function displayTodos(project) {
     todos.appendChild(projectDescription);
     todos.appendChild(projectDueDate);
     todos.appendChild(newTodoBtn);
+
+    // add delete button to project only if it is not the default project
+    if (projectDiv.dataset.index > 0) {
+        let deleteProjectBtn = document.createElement("button");
+        deleteProjectBtn.textContent = "Delete Project";
+        todos.appendChild(deleteProjectBtn);
+        deleteProjectBtn.addEventListener("click", () => {
+            removeProject(projectDiv);
+        });
+    }
 
     // show form to add a new todo when the new todo botton is clicked
     newTodoBtn.addEventListener("click", () => {
