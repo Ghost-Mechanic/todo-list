@@ -84,7 +84,7 @@ function addTodoToDOM(todo, project, todoIndex) {
     let todoTitle = document.createElement("h3");
     let todoDueDate = document.createElement("p");
     todoTitle.textContent = todo.title;
-    todoDueDate.textContent = todo.dueDate;
+    todoDueDate.textContent = "Due: " + todo.dueDate;
     todoContent.appendChild(todoTitle);
     todoContent.appendChild(todoDueDate);
 
@@ -136,8 +136,12 @@ function displayTodos(project, projectDiv) {
     let todoButtons = document.createElement("div");
     let newTodoBtn = document.createElement("button");
     projectDescription.textContent = project.description;
-    projectDueDate.textContent = project.dueDate;
+    projectDueDate.textContent = "Due: " + project.dueDate;
     newTodoBtn.textContent = "+ Todo";
+    projectDescription.classList.add("project-description");
+    projectDueDate.classList.add("project-due-date");
+    newTodoBtn.classList.add("new-todo-button");
+    todoButtons.classList.add("todo-buttons");
     todos.appendChild(projectDescription);
     todos.appendChild(projectDueDate);
     todoButtons.appendChild(newTodoBtn);

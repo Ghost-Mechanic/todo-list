@@ -24,6 +24,23 @@ function createProject(currProject) {
     if (dueDateField.value == "") {
         newDueDate = "No due date given";
     }
+    else {
+
+        // create date formatted as month day, year
+        let dateArray = newDueDate.split('-');
+        let year = dateArray[0];
+        let month = dateArray[1];
+        let day = dateArray[2];
+
+        let dateObject = new Date(`${year}-${month}-${day}`);
+
+        let months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        newDueDate = `${months[dateObject.getMonth()]} ${dateObject.getDate()}, ${dateObject.getFullYear()}`;
+    }
 
     // create a new project object with constructor
     let newProject = new Project(newTitle, newDescription, newDueDate);
@@ -72,6 +89,23 @@ function createTodo(project) {
     }
     if (dueDateField.value == "") {
         newDueDate = "No due date given";
+    }
+    else {
+
+        // create date formatted as month day, year
+        let dateArray = newDueDate.split('-');
+        let year = dateArray[0];
+        let month = dateArray[1];
+        let day = dateArray[2];
+
+        let dateObject = new Date(`${year}-${month}-${day}`);
+
+        let months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        newDueDate = `${months[dateObject.getMonth()]} ${dateObject.getDate()}, ${dateObject.getFullYear()}`;
     }
 
     // create a new todo object and add it to the project's todo list
